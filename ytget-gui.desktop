@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=YouTube Downloader GUI
+Comment=Download YouTube videos using GUI
+Exec=/home/yoga/Apps/ytget-gui.sh
+Icon=video
+Terminal=false
+Type=Application
+Categories=Network;AudioVideo;
