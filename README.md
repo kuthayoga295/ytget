@@ -1,2 +1,2 @@
 # ytget
-yt-dlp script untuk download video youtube
+yt-dlp script untuk download video youtube oleh chatgpt
