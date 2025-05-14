@@ -1,2 +1,2 @@
 # ytget
-yt-dlp script
+yt-dlp script untuk download video youtube
