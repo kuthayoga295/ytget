@@ -30,11 +30,12 @@ esac
 
 # Show pulsating progress bar
 (
-  echo "10"
   echo "# Fetching available formats..."
   sleep 1
-) | yad --progress --title="Please wait..." --text="Fetching available formats..." \
-  --center --width=400 --height=100 --pulsate --auto-close --no-buttons &
+) | yad --progress --title="Please wait..." \
+  --text="Fetching available formats..." \
+  --center --width=400 --height=100 \
+  --pulsate --auto-close --no-buttons &
 
 # Fetch available formats (safe way)
 all_formats=$(yt-dlp -F "$url")
@@ -72,19 +73,26 @@ format_id=$(echo "$chosen" | awk -F '|' '{print $1}')
 
 # Download process
 (
-  echo "10"
+  echo "Downloading, please wait..."
   if [[ "$format_id" == "audio-mp3" ]]; then
     yt-dlp -x --audio-format mp3 -o "$HOME/%(title)s.%(ext)s" "$url"
   else
     is_video_only=$(echo "$all_formats" | awk -v k="$format_id" '$1 == k && $0 ~ /video only/ {print "yes"}')
     if [[ "$is_video_only" == "yes" ]]; then
-      yt-dlp -f "$format_id+bestaudio" --merge-output-format mkv --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
+      yt-dlp -f "$format_id+bestaudio" --merge-output-format mkv \
+        --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
     else
-      yt-dlp -f "$format_id" --merge-output-format mkv --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
+      yt-dlp -f "$format_id" --merge-output-format mkv \
+        --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
     fi
   fi
-  echo "100"
-) | yad --progress --title="Downloading..." --text="Please wait..." \
-  --center --width=400 --height=100 --percentage=0 --auto-close
+) | yad --progress \
+  --pulsate \
+  --title="Downloading..." \
+  --text="Please wait..." \
+  --center \
+  --width=400 \
+  --height=100 \
+  --auto-close
 
 yad --info --text="Download complete!" --width=400 --height=100 --center
