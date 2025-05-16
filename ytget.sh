@@ -70,7 +70,7 @@ echo ""
 # === Audio Only ===
 if [[ "$pilihan" -eq "$audio_option" ]]; then
   echo "🎧 Mengunduh audio-only (MP3)..."
-  yt-dlp -x --audio-format mp3 -o "%(title)s.%(ext)s" "$url"
+  yt-dlp -x --audio-format mp3 -o "$HOME/%(title)s.%(ext)s" "$url"
 
 # === Video / Audio Merge ===
 elif [[ "${format_codes[$pilihan]}" ]]; then
@@ -81,10 +81,10 @@ elif [[ "${format_codes[$pilihan]}" ]]; then
 
   if [[ "$is_video_only" == "yes" ]]; then
     echo "📦 Format ini video-only, menggabungkan dengan best audio..."
-    yt-dlp -f "$kode+bestaudio" --merge-output-format mkv -o "%(title)s.%(ext)s" "$url"
+    yt-dlp -f "$kode+bestaudio" --merge-output-format mkv --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
   else
     echo "🎞️ Format ini sudah termasuk audio, langsung unduh..."
-    yt-dlp -f "$kode" --merge-output-format mkv -o "%(title)s.%(ext)s" "$url"
+    yt-dlp -f "$kode" --merge-output-format mkv --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
   fi
 
 else
