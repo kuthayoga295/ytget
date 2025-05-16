@@ -88,6 +88,7 @@ format_id=$(echo "$chosen" | awk -F '|' '{print $1}')
   fi
 ) | yad --progress \
   --pulsate \
+  --no-percentage \
   --title="Downloading..." \
   --text="Please wait..." \
   --center \
