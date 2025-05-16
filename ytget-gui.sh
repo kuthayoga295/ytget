@@ -74,13 +74,13 @@ format_id=$(echo "$chosen" | awk -F '|' '{print $1}')
 (
   echo "10"
   if [[ "$format_id" == "audio-mp3" ]]; then
-    yt-dlp -x --audio-format mp3 -o "%(title)s.%(ext)s" "$url"
+    yt-dlp -x --audio-format mp3 -o "$HOME/%(title)s.%(ext)s" "$url"
   else
     is_video_only=$(echo "$all_formats" | awk -v k="$format_id" '$1 == k && $0 ~ /video only/ {print "yes"}')
     if [[ "$is_video_only" == "yes" ]]; then
-      yt-dlp -f "$format_id+bestaudio" --merge-output-format mkv -o "%(title)s.%(ext)s" "$url"
+      yt-dlp -f "$format_id+bestaudio" --merge-output-format mkv --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
     else
-      yt-dlp -f "$format_id" --merge-output-format mkv -o "%(title)s.%(ext)s" "$url"
+      yt-dlp -f "$format_id" --merge-output-format mkv --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
     fi
   fi
   echo "100"
