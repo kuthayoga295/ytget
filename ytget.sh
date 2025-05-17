@@ -33,7 +33,7 @@ case $codec_choice in
   2) codec_filter="avc1" ;;
   3) codec_filter="vp" ;;
   4) codec_filter="av01" ;;
-  *) echo "❌ Pilihan tidak valid!"; exit 1 ;;
+  *) echo "Pilihan tidak valid!"; exit 1 ;;
 esac
 
 echo ""
