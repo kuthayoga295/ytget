@@ -82,10 +82,10 @@ elif [[ "${format_codes[$pilihan]}" ]]; then
   is_video_only=$(yt-dlp -F "$url" | awk -v k="$kode" '$1 == k && $0 ~ /video only/ { print "yes" }')
 
   if [[ "$is_video_only" == "yes" ]]; then
-    echo "📦 Format ini video-only, menggabungkan dengan best audio..."
+    echo "Format ini video-only, menggabungkan dengan best audio..."
     yt-dlp -f "$kode+bestaudio" --merge-output-format mkv --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
   else
-    echo "🎞️ Format ini sudah termasuk audio, langsung unduh..."
+    echo "Format ini sudah termasuk audio, langsung unduh..."
     yt-dlp -f "$kode" --merge-output-format mkv --postprocessor-args "ffmpeg:-c:a aac" -o "$HOME/%(title)s.%(ext)s" "$url"
   fi
 
