@@ -43,15 +43,15 @@ echo [1] Download Video (Best Quality)
 echo [2] Download Audio (MP3)
 echo [3] Select Video Format
 echo [4] Stream Video
-echo [5] Exit
+echo [0] Exit
 echo ==============================
-set /p "CHOICE=Enter choice [1-5]: "
+set /p "CHOICE=Enter choice [0-4]: "
 
 if "%CHOICE%"=="1" goto BEST_VIDEO
 if "%CHOICE%"=="2" goto AUDIO
 if "%CHOICE%"=="3" goto SELECT_FORMAT
 if "%CHOICE%"=="4" goto PLAY
-if "%CHOICE%"=="5" goto EXIT
+if "%CHOICE%"=="0" goto EXIT
 
 echo.
 echo Invalid choice!
@@ -105,44 +105,39 @@ echo [2] 1080p
 echo [3] 720p
 echo [4] 480p
 echo [5] 360p
-echo [6] Back to Main Menu
+echo [0] Back to Main Menu
 echo ==============================
 set "RES="
-set /p "RES=Select quality [1-6]: "
+set /p "RES=Select quality [0-5]: "
 
 set "MPV_FLAGS=--hwdec=auto-safe"
 
 if "%RES%"=="1" (
     echo Streaming best quality...
     mpv %MPV_FLAGS% "%URL%"
-    pause
     goto PLAY
 )
 if "%RES%"=="2" (
     echo Streaming 1080p...
     mpv %MPV_FLAGS% --ytdl-format="bestvideo[height<=1080]+bestaudio/best[height<=1080]" "%URL%"
-    pause
     goto PLAY
 )
 if "%RES%"=="3" (
     echo Streaming 720p...
     mpv %MPV_FLAGS% --ytdl-format="bestvideo[height<=720]+bestaudio/best[height<=720]" "%URL%"
-    pause
     goto PLAY
 )
 if "%RES%"=="4" (
     echo Streaming 480p...
     mpv %MPV_FLAGS% --ytdl-format="bestvideo[height<=480]+bestaudio/best[height<=480]" "%URL%"
-    pause
     goto PLAY
 )
 if "%RES%"=="5" (
     echo Streaming 360p...
     mpv %MPV_FLAGS% --ytdl-format="bestvideo[height<=360]+bestaudio/best[height<=360]" "%URL%"
-    pause
     goto PLAY
 )
-if "%RES%"=="6" goto MENU
+if "%RES%"=="0" goto MENU
 
 echo.
 echo Invalid choice!
