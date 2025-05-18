@@ -43,16 +43,16 @@ function menu() {
     echo "[2] Download Audio (MP3)"
     echo "[3] Select Video Format"
     echo "[4] Stream Video"
-    echo "[5] Exit"
+    echo "[0] Exit"
     echo "=============================="
-    read -rp "Enter choice [1-5]: " CHOICE
+    read -rp "Enter choice [0-4]: " CHOICE
 
     case "$CHOICE" in
         1) best_video ;;
         2) audio ;;
         3) select_format ;;
         4) play ;;
-        5) exit 0 ;;
+        0) exit 0 ;;
         *) echo "Invalid choice!"; read -rp "Press Enter to continue..."; menu ;;
     esac
 }
@@ -103,9 +103,9 @@ function play() {
     echo "[3] 720p"
     echo "[4] 480p"
     echo "[5] 360p"
-    echo "[6] Back to Main Menu"
+    echo "[0] Back to Main Menu"
     echo "==============================="
-    read -rp "Select quality [1-6]: " RES
+    read -rp "Select quality [5-5]: " RES
 
     MPV_FLAGS="--hwdec=auto-safe"
 
@@ -115,7 +115,7 @@ function play() {
         3) echo "Streaming 720p..."; mpv $MPV_FLAGS --ytdl-format="bestvideo[height<=720]+bestaudio/best[height<=720]" "$URL" ;;
         4) echo "Streaming 480p..."; mpv $MPV_FLAGS --ytdl-format="bestvideo[height<=480]+bestaudio/best[height<=480]" "$URL" ;;
         5) echo "Streaming 360p..."; mpv $MPV_FLAGS --ytdl-format="bestvideo[height<=360]+bestaudio/best[height<=360]" "$URL" ;;
-        6) menu; return ;;
+        0) menu; return ;;
         *) echo "Invalid choice!"; read -rp "Press Enter to continue..."; play; return ;;
     esac
 
