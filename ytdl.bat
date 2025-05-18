@@ -1,63 +1,63 @@
 @echo off
 setlocal enabledelayedexpansion
 set "OUTDIR=%USERPROFILE%\Downloads"
+
 :MENU
 cls
 echo ==============================
 echo              YTDL
 echo ==============================
-set /p URL=Masukkan URL YouTube:
+set "URL="
+set /p "URL=Enter YouTube URL: "
 if "%URL%"=="" (
-    echo [ERROR] URL tidak boleh kosong.
+    echo [ERROR] URL cannot be empty.
     pause
     goto MENU
 )
 
-echo [1] Download Video MKV
-echo [2] Download Audio MP3
+echo [1] Download Video as MKV
+echo [2] Download Audio as MP3
 echo [3] Exit
 echo ==============================
-set /p PILIH=Masukkan pilihan [1-3]:
+set "SELECT="
+set /p "SELECT=Enter choice [1-3]: "
 
-if "%PILIH%"=="1" goto VIDEO
-if "%PILIH%"=="2" goto AUDIO
-if "%PILIH%"=="3" goto EXIT
+if "%SELECT%"=="1" goto VIDEO
+if "%SELECT%"=="2" goto AUDIO
+if "%SELECT%"=="3" goto EXIT
 echo.
-echo Pilihan tidak valid!
+echo Invalid choice!
 pause
 goto MENU
 
 :VIDEO
 echo.
-echo Pilih codec video:
-echo [1] All (default)
-echo [2] AVC / H.264
-echo [3] VP9
-echo [4] AV1
-set /p CODEC=Kode codec [1-4]:
+echo Showing all available video and audio formats...
+yt-dlp -F "%URL%"
+echo.
 
-if "%CODEC%"=="2" ( set FILTER=[vcodec*=avc1] )
-if "%CODEC%"=="3" ( set FILTER=[vcodec*=vp] )
-if "%CODEC%"=="4" ( set FILTER=[vcodec*=av01] )
-if not defined FILTER set FILTER=
+set "VIDFORMAT="
+set /p "VIDFORMAT=Enter video-only format ID to download: "
+
+if "%VIDFORMAT%"=="" (
+    echo [ERROR] Format ID cannot be empty!
+    pause
+    goto MENU
+)
 
 echo.
-echo Pilih resolusi video (contoh: 720, 1080, 1440, 2160):
-set /p RESOLUSI=Resolusi:
-
-echo.
-echo Mengunduh video %RESOLUSI%p ke MKV di folder Downloads...
-yt-dlp -f "bv[height<=%RESOLUSI%%FILTER%]+ba" --merge-output-format mkv -o "%OUTDIR%\%%(title)s.%%(ext)s" %URL%
+echo Downloading video format %VIDFORMAT% + bestaudio as MKV to Downloads folder...
+yt-dlp -f "%VIDFORMAT%+bestaudio" --merge-output-format mkv -o "%OUTDIR%\%%(title)s.%%(ext)s" "%URL%"
 pause
 goto MENU
 
 :AUDIO
 echo.
-echo Mengunduh audio dan mengonversi ke MP3 ke folder Downloads...
-yt-dlp -f "bestaudio" --extract-audio --audio-format mp3 -o "%OUTDIR%\%%(title)s.%%(ext)s" %URL%
+echo Downloading best audio and converting to MP3 in Downloads folder...
+yt-dlp -f "bestaudio" --extract-audio --audio-format mp3 -o "%OUTDIR%\%%(title)s.%%(ext)s" "%URL%"
 pause
 goto MENU
 
 :EXIT
 echo.
-exit
+exit /b
