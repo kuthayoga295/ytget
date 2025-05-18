@@ -105,7 +105,7 @@ function play() {
     echo "[5] 360p"
     echo "[0] Back to Main Menu"
     echo "==============================="
-    read -rp "Select quality [5-5]: " RES
+    read -rp "Select quality [0-5]: " RES
 
     MPV_FLAGS="--hwdec=auto-safe"
 
