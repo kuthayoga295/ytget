@@ -86,9 +86,18 @@ function select_format() {
         select_format
         return
     fi
-
-    echo "Downloading format $FORMAT + bestaudio..."
-    yt-dlp -f "$FORMAT+bestaudio" --merge-output-format mkv -o "${OUTDIR}/%(title)s.%(ext)s" "$URL"
+    
+    CODEC=$(yt-dlp -j "$URL" | jq -r --arg fmt "$FORMAT" '.formats[] | select(.format_id == $fmt) | .vcodec' | cut -d. -f1)
+    echo "Video Codec: $CODEC"
+    
+    if [[ "$CODEC" == "avc1" ]]; then
+        echo "Downloading format $FORMAT + bestaudio..."
+        yt-dlp -f "$FORMAT+bestaudio[ext=m4a]" --merge-output-format mp4 -o "${OUTDIR}/%(title)s.%(ext)s" "$URL"
+    else
+        echo "Downloading format $FORMAT + bestaudio..."
+        yt-dlp -f "$FORMAT+bestaudio" --merge-output-format mkv -o "${OUTDIR}/%(title)s.%(ext)s" "$URL"
+    fi
+    
     read -rp "Press Enter to continue..."
     menu
 }
