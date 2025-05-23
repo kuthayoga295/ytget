@@ -1,4 +1,4 @@
-# ytget - yt-dlp script for linux and windows to download or streaming youtube video
+ytget - yt-dlp script for linux and windows to download or streaming youtube video
 -------------------------------------------
 required dependencies: yt-dlp, ffmpeg, mpv
 - yt-dlp: https://github.com/yt-dlp/yt-dlp
