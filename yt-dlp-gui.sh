@@ -40,7 +40,7 @@ case "$quality" in
   "2K")     format_code="bestvideo[height<=1440]+bestaudio[ext=m4a]" ;;
   "4K")     format_code="bestvideo[height<=2160]+bestaudio[ext=m4a]" ;;
   "Best")   format_code="bestvideo+bestaudio[ext=m4a]" ;;
-  "Audio-only (MP3)") format_code="bestaudio" ;;
+  "Audio-only (MP3)") format_code="bestaudio[ext=m4a]" ;;
   *)        format_code="bestvideo+bestaudio/best" ;;
 esac
 
@@ -64,7 +64,7 @@ filename=$(echo "$title" | tr -dc '[:alnum:]\n\r _-' | tr ' ' '_')
 ) | zenity --progress --pulsate \
   --title="Downloading..." \
   --text="Please wait..." \
-  --no-cancel --auto-close --width=500
+  --no-cancel --auto-close --width=400
 
 # === Check result ===
 if [[ $? -eq 0 ]]; then
