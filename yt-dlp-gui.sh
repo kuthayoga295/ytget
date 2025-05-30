@@ -11,10 +11,10 @@ done
 
 # === Input URL and quality ===
 input=$(zenity --forms --title="YouTube Downloader" \
-  --text="Enter the YouTube URL and select download quality:" \
+  --text="Enter URL and select download quality: " \
   --add-entry="YouTube URL" \
   --add-combo="Quality" \
-  --combo-values="Best|360p|480p|720p|1080p|2K|4K|Audio-only (MP3)" \
+  --combo-values="Best|360p|480p|720p|1080p|2K|4K|Audio-only" \
   --width=500 --height=200)
 
 # === Handle cancel ===
@@ -31,17 +31,22 @@ if [[ -z "$url" || -z "$quality" ]]; then
   exit 1
 fi
 
+if ! [[ "$url" =~ ^https?://(www\.)?(youtube\.com|youtu\.be|music\.youtube\.com)/ ]]; then
+  zenity --error --text="Invalid YouTube or YouTube Music URL."
+  exit 1
+fi
+
 # === Format selector based on quality ===
 case "$quality" in
-  "360p")   format_code="bestvideo[height<=360]+bestaudio[acodec^=mp4a]" ;;
-  "480p")   format_code="bestvideo[height<=480]+bestaudio[acodec^=mp4a]" ;;
-  "720p")   format_code="bestvideo[height<=720]+bestaudio[acodec^=mp4a]" ;;
-  "1080p")  format_code="bestvideo[height<=1080]+bestaudio[acodec^=mp4a]" ;;
-  "2K")     format_code="bestvideo[height<=1440]+bestaudio[acodec^=mp4a]" ;;
-  "4K")     format_code="bestvideo[height<=2160]+bestaudio[acodec^=mp4a]" ;;
-  "Best")   format_code="bestvideo+bestaudio" ;;
-  "Audio-only (MP3)") format_code="bestaudio[acodec^=mp4a]" ;;
-  *)        format_code="bestvideo+bestaudio" ;;
+  "360p")   format_code="bv[height<=360][vcodec^=avc]+ba[acodec^=mp4a]/bv[height<=360]+ba --merge-output-format mp4 " ;;
+  "480p")   format_code="bv[height<=480][vcodec^=avc]+ba[acodec^=mp4a]/bv[height<=480]+ba --merge-output-format mp4 " ;;
+  "720p")   format_code="bv[height<=720][vcodec^=avc]+ba[acodec^=mp4a]/bv[height<=720]+ba --merge-output-format mp4 " ;;
+  "1080p")  format_code="bv[height<=1080][vcodec^=avc]+ba[acodec^=mp4a]/bv[height<=1080]+ba --merge-output-format mp4 " ;;
+  "2K")     format_code="bv[height<=1440]+ba --merge-output-format mkv " ;;
+  "4K")     format_code="bv[height<=2160]+ba --merge-output-format mkv " ;;
+  "Best")   format_code="bv+ba --merge-output-format mkv " ;;
+  "Audio-only") format_code="ba[acodec^=mp4a]" ;;
+  *)        format_code="bv+ba --merge-output-format mkv " ;;
 esac
 
 # === Output directory ===
@@ -58,7 +63,6 @@ filename=$(echo "$title" | tr -dc '[:alnum:]\n\r _-' | tr ' ' '_')
       -o "$output_dir/${filename}.%(ext)s" "$url"
   else
     yt-dlp -f "$format_code" \
-      --merge-output-format mp4 \
       -o "$output_dir/${filename}.%(ext)s" "$url"
   fi
 ) | zenity --progress --pulsate \
